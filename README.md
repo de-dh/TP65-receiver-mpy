@@ -2,6 +2,11 @@
 
 ## Description
 
+> [!TIP]
+> I recommend [these steps](https://github.com/de-dh/MPY-RF) to optimize reception if you are using a RX470C RF receiver module.
+> Other receivers were not tested.
+
+
 <img align="right" src="img/Setup.jpg" width="250" height="auto" />
 
 Receive temperature data with MicroPython from ThermoPro TP65s outdoor temperature sensor with the RX470C-V01 module.
