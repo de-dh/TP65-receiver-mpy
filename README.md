@@ -45,10 +45,11 @@ Each message consists of 37 high and low pulses + gap:
 
 
 Decode the data:
+- Data is encoded in the [two's complement format](https://en.wikipedia.org/wiki/Two%27s_complement) using 12 Bit. The decoded integer must be divided by ten to obtain the temperature.
 - Temperaturs above 0 °C: Convert binary data to decimal number and divide by 10.
-    - E. g. '000010100110' --> 166 --> 16,6 °C
-- Temperature below 0 °C: Convert binary data to decimal number, subtract 4096 and divide by 10.
-    - E. g. '111110111100' --> 4028 -->  4028 - 4096 = -68 --> -6,8°C
+    - E. g. `'000010100110' --> 166 --> 16,6 °C`
+- Temperature below 0 °C: Convert binary data to decimal number, subtract 4096 (2^12) and divide by 10.
+    - E. g. `'111110111100' --> 4028 -->  4028 - 4096 = -68 --> -6,8°C`
 
 
 The figure shows measured signals of the outoor sensor at different temperatures and the received binary data.
