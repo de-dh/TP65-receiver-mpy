@@ -9,11 +9,10 @@
 
 <img align="right" src="img/TP.jpg" width="250" height="auto" />
 
-Receive temperature data with MicroPython from ThermoPro TP65s outdoor temperature sensor with the RX470C-V01 module.
-The RX470C-V01 module is a low cost (~2 €) 433 MHz receiver for use with microcontrollers (MCUs).
-
-
-The program was tested on a Raspberry Pi Pico and on an Esp32-WROVER-B running MicroPython v1.23.0.
+This programm allows the reception of temperature data from a **ThermoPro TP65s** outdoor temperature sensor using **MicroPython**.
+The TP sensor transmitts it's data via the 433 MHz ISM Band which can be aquired using a RX470C-V01 receiver.
+The **RX470C-V01** module is a low cost (~2 €) 433 MHz receiver for use with microcontrollers (MCUs).
+The program was tested on a **Raspberry Pi Pico** and on an **Esp32-WROVER-B** running MicroPython v1.23.0.
 
 ## Changelog
 
@@ -27,7 +26,7 @@ To Do:
 
 
 ## Hardware Setup
-The RX470C-V01 module (RX) only needs one GPIO pin for data transmission.
+The RX470C-V01 module (RX) only needs one GPIO pin for communication with the MCU.
 It can be supplied with either 5V or 3.3V.
 RX has two identical digital output (DO) pins, either of them may be used.
 <img align="right" src="img/Setup.jpg" width="250" height="auto" />
@@ -39,24 +38,34 @@ Exemplary connections:
 
 
 ## Decoding the RF Protocol of the ThermoPro Temperature Sensor
-A HackRF and UniversalRadioHacker were used to analyze the RF protocol of the outdoor temperature sensor.
-The outdoor temperature sensor periodically transmitts temperature data to the indoor base station using on-off-keying (OOK) on the 433 MHz band.
+A HackRF and UniversalRadioHacker were used to analyze the RF protocol of the ThermoPro TP65s outdoor temperature sensor (refferred to as _TP sensor_ in the following).
+The TP sensor periodically transmitts temperature data to the indoor base station using on-off-keying (OOK) on the 433 MHz band.
 
-Data is encoded similar to a morse encoding with alternating high and low pulses. 
+The data is transmitted similar to a morse encoding with alternating high and low pulses.
+Each bit is encoded by a high pulse and a low pulse.
 High pulses have fixed durations of ~500 µs followed by low pulses with durations of either 2000 µs or 4000 µs, encoding 0 and 1, respectively.
-A transmission is repeated six times seperated by a 8800 µs gap low pulse between each data transmission.
+Each message consits of six similar transmissions of the data. 
+The individual transmissions are seperated by a long low pulse (gap) with a duration of approx. 8800 µs.
 Data is transmitted periodically every 50s.
 
-Each message consists of 37 high and low pulses + gap:
+OOK Protocol:
+- Bit 0: HIGH 500 µs + LOW 2000 µs
+- Bit 1: HIGH 500 µs + LOW 4000 µs
+- Gap : LOW 8800 µs
+
+Structure of the Transmissions:
 - Bit 01 - 14: Transmitter Address (probably LFSR generated)
 - Bit 15 - 16: Channel No (1 - 3)
 - Bit 17 - 28: Data = 12 Bit
-- Bit 29 - 37: End Sequence = '000000011' + gap
+- Bit 29 - 37: End Sequence = '000000011'
+- Gap
 
+Decoding the Data:
+- Data is encoded in the [two's complement format](https://en.wikipedia.org/wiki/Two%27s_complement) consisting of 12 bit.
+- The decoded integer must be divided by ten to obtain the temperature.
 
-Decoding the data:
-- Data is encoded in the [two's complement format](https://en.wikipedia.org/wiki/Two%27s_complement) consisting of 12 bit. The decoded integer must be divided by ten to obtain the temperature.
-- Temperaturs above 0 °C: Convert binary data to decimal number and divide by 10.
+Examples:
+- Temperature above 0 °C: Convert binary data to decimal number and divide by 10.
     - E. g. `'000010100110' --> 166 --> 16,6 °C`
 - Temperature below 0 °C: Convert binary data to decimal number, subtract 4096 (2^12) and divide by 10.
     - E. g. `'111110111100' --> 4028 -->  4028 - 4096 = -68 --> -6,8°C`
