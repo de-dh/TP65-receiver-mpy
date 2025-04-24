@@ -73,7 +73,7 @@ Examples:
 
 The figure shows measured signals of the outoor sensor at different temperatures and the received binary data.
 
-<img src="img/TP_Protocol_Analysis_Edited.png" width="800" height="auto" />
+<img src="img/TP_Protocol_Analysis_Edited.jpg" width="800" height="auto" />
 
 ## Acknowledgement
 Parts of the signal decoding function are based on Peter Hinch's [micropython_remote](https://github.com/peterhinch/micropython_remote) RX class provided under MIT license.
