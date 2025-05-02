@@ -45,8 +45,8 @@ OOK is the simplest form of Amplitude Shift Keying (ASK) modulation. Basically, 
 The data is transmitted similar to a morse encoding with alternating high and low pulses.
 Each bit is encoded by a high pulse and a low pulse.
 High pulses have fixed durations of ~500 µs followed by low pulses with durations of either 2000 µs or 4000 µs, encoding 0 and 1, respectively.
-Each message consits of six similar transmissions of the data. 
-The individual transmissions are seperated by a long low pulse (gap) with a duration of approx. 8800 µs.
+Each transmission consits of six similar messages containing the data. 
+The individual messages are seperated by a long low pulse (gap) with a duration of approx. 8800 µs.
 Data is transmitted periodically every 50s.
 
 ![Screenshot from URH of a complete transmission](img/TP_Complete_Signal.jpg)
@@ -93,13 +93,20 @@ It was easy to integrate in the receiver programm.
 
 
 The main difference compared to the TP sensor is the length of a single message which is 32 frames.
-
+Furthermore, the data is transmitted periodically every 30 seconds.
 
 Structure of the Transmissions:
 - Bit 01 - 12: Transmitter Address (probably LFSR generated)
 - Bit 13 - 24: Data = 12 Bit
 - Bit 25 - 32: End Sequence
 - Gap
+
+# Exemplary Use
+
+I built a Touch Control Panel for my bedside table which also displays the temperature data from the TP sensor and from the no name sensor.
+I used a [Cheap Yellow Display and LVGL](https://github.com/de-dh/ESP32-Cheap-Yellow-Display-Micropython-LVGL) to create a simple UI.
+
+<img align="right" src="img/CYD_Panel.jpg" width="250" height="auto" />
 
 
 ## Acknowledgement
