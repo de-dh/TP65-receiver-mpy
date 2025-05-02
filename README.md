@@ -40,6 +40,7 @@ Exemplary connections:
 ## Decoding the RF Protocol of the ThermoPro Temperature Sensor
 A HackRF and UniversalRadioHacker were used to analyze the RF protocol of the ThermoPro TP65s outdoor temperature sensor (refferred to as _TP sensor_ in the following).
 The TP sensor periodically transmitts temperature data to the indoor base station using on-off-keying (OOK) on the 433 MHz band.
+OOK is the simplest form of Amplitude Shift Keying (ASK) modulation. Basically, the carrier signal is turned on and off to transmitt high and low states.
 
 The data is transmitted similar to a morse encoding with alternating high and low pulses.
 Each bit is encoded by a high pulse and a low pulse.
@@ -78,8 +79,28 @@ Examples:
 
 
 The figure shows measured signals of the outoor sensor at different temperatures and the received binary data.
-
 <img src="img/TP_Protocol_Analysis_Edited.jpg" width="800" height="auto" />
+
+
+# No-Name temperature sensor
+I bought this receiver as part of a low-cost temperature station at a discounter some years ago (probably from Aldi or Lidl). I could not identify the brand.
+It was placed outside for years and the battery contacts where oxidized. Therefore, I attached an external battery holder.
+
+Interestingly, this temperature sensor uses the same OOK encoding pattern as the TP sensor.
+It was easy to integrate in the receiver programm.
+
+<img align="right" src="img/NN_Front_and_Back.jpg" width="250" height="auto" />
+
+
+The main difference compared to the TP sensor is the length of a single message which is 32 frames.
+
+
+Structure of the Transmissions:
+- Bit 01 - 12: Transmitter Address (probably LFSR generated)
+- Bit 13 - 24: Data = 12 Bit
+- Bit 25 - 32: End Sequence
+- Gap
+
 
 ## Acknowledgement
 Parts of the signal decoding function are based on Peter Hinch's [micropython_remote](https://github.com/peterhinch/micropython_remote) RX class provided under MIT license.
