@@ -48,10 +48,16 @@ Each message consits of six similar transmissions of the data.
 The individual transmissions are seperated by a long low pulse (gap) with a duration of approx. 8800 µs.
 Data is transmitted periodically every 50s.
 
+![Screenshot from URH of a complete transmission](img/TP_Complete_Signal.jpg)
+
 OOK Protocol:
 - Bit 0: HIGH 500 µs + LOW 2000 µs
 - Bit 1: HIGH 500 µs + LOW 4000 µs
 - Gap : LOW 8800 µs
+
+
+![Screenshot from URH of a single message](img/TP_Single_Message.jpg)
+
 
 Structure of the Transmissions:
 - Bit 01 - 14: Transmitter Address (probably LFSR generated)
